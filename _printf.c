@@ -34,7 +34,6 @@ s_len = print_str(va_arg(x, char*));
 r += s_len;
 i++;
 }
-else if (format[i + 1] == 'd')
 }
 
 va_end(x);
