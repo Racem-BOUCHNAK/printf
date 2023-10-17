@@ -22,17 +22,17 @@ r++;
 }
 else if (format[i + 1] == 'c')
 {
-put_char(va_arg(x, int));
+_putchar(va_arg(x, int));
 i++;
 }
 else if (format[i + 1] == '%')
 {
-put_char('%');
+_putchar('%');
 i++;
 }
 else if (format[i + 1] == 's')
 {
-s_len = print_str(va_arg(x, char*));
+s_len = print_string(va_arg(x, char*));
 r += s_len;
 i++;
 }
