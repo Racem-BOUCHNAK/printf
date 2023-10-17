@@ -11,7 +11,7 @@ va_list x;
 if (format)
 {
 if (format == NULL)
-return (-1);
+return (1);
 va_start(x, format);
 for (i = 0; format[i] != '\0'; i++)
 {
@@ -41,4 +41,5 @@ i++;
 va_end(x);
 return (r);
 }
+return (1);
 }
