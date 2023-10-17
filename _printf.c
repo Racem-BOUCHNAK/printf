@@ -8,6 +8,8 @@ int _printf(const char *format, ...)
 {
 unsigned int i, s_len, r = 0;
 va_list x;
+if (format)
+{
 if (format == NULL)
 return (-1);
 va_start(x, format);
@@ -38,4 +40,5 @@ i++;
 
 va_end(x);
 return (r);
+}
 }
