@@ -1,45 +1,92 @@
-#include "main.h"
-#include <unistd.h>  /* Include the necessary header */
+#include <unistd.h>
+#include <stdarg.h>
+#include <stdio.h>
+
+/* Function declarations */
+int _printf(const char *format, ...);
+int _putchar(char c);
+int print_str(char *str);
 
 /**
- * print_char - Helper function to print a single character
- * @ap: Argument list
- * @params: Format parameters
+ * _printf - Custom printf function
+ * @format: Format string
  *
- * Return: Number of characters printed
+ * Return: Number of characters printed (excluding the null byte)
  */
-int print_char(va_list ap, params_t *params)
+int _printf(const char *format, ...)
 {
-	char c = va_arg(ap, int);
+	va_list args;
+	int count = 0;
 
-	write(1, &c, 1);
-	params->count++;
-	return (1);
+	va_start(args, format);
+
+	while (format && *format)
+	{
+		if (*format == '%' && *(format + 1) != '\0')
+		{
+			format++; /* Move past '%' */
+
+			switch (*format)
+			{
+			case 'c':
+				count += _putchar(va_arg(args, int));
+				break;
+
+			case 's':
+				count += print_str(va_arg(args, char *));
+				break;
+
+			case '%':
+				count += _putchar('%');
+				break;
+
+			default:
+				count += _putchar('%'); /* Print the '%' character */
+				count += _putchar(*format);
+			}
+		}
+		else
+		{
+			count += _putchar(*format);
+		}
+
+		format++;
+	}
+
+	va_end(args);
+
+	return (count);
 }
 
 /**
- * print_str - Helper function to print a string
- * @ap: Argument list
- * @params: Format parameters
+ * _putchar - Custom putchar function
+ * @c: Character to be printed
  *
- * Return: Number of characters printed
+ * Return: 1 (success) or EOF (failure)
  */
-int print_str(va_list ap, params_t *params)
+int _putchar(char c)
 {
-	char *str = va_arg(ap, char *);
-	int len = 0;
+	return (write(1, &c, 1));
+}
+
+/**
+ * print_str - Custom function to print a string
+ * @str: String to be printed
+ *
+ * Return: Number of characters printed (excluding the null byte)
+ */
+int print_str(char *str)
+{
+	int count = 0;
 
 	if (str == NULL)
 		str = "(null)";
 
-	while (str[len])
+	while (*str)
 	{
-		write(1, &str[len], 1);
-		len++;
-		params->count++;
+		count += _putchar(*str);
+		str++;
 	}
 
-	return (len);
+	return (count);
 }
-
-/* Add other print functions as needed */
