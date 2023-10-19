@@ -1,92 +1,39 @@
-#include <unistd.h>
-#include <stdarg.h>
-#include <stdio.h>
-
-/* Function declarations */
-int _printf(const char *format, ...);
-int _putchar(char c);
-int print_str(char *str);
+#include "main.h"
 
 /**
- * _printf - Custom printf function
- * @format: Format string
- *
- * Return: Number of characters printed (excluding the null byte)
+ * _printf - Receives the main string and all the necessary parameters to
+ * print a formated string
+ * @format: A string containing all the desired characters
+ * Return: A total count of the characters printed
  */
+
 int _printf(const char *format, ...)
 {
-	va_list args;
-	int count = 0;
+	int printed_chars;
+	conver_t f_list[] = {
+		{"%", print_percent},
+		{"d", print_integer},
+		{"i", print_integer},
+		{"c", print_char},
+		{"s", print_string},
+		{"b", print_binary},
+		{"u", print_unsigned_integer},
+		{"o", print_octal},
+		{"x", print_hex},
+		{"X", print_HEX},
+		{"S", print_String},
+		{"p", print_pointer},
+		{"r", print_rev},
+		{"R", print_rot13},
+		{NULL, NULL},
+	};
+	va_list arg_list;
 
-	va_start(args, format);
+	if (format == NULL)
+		return (-1);
 
-	while (format && *format)
-	{
-		if (*format == '%' && *(format + 1) != '\0')
-		{
-			format++; /* Move past '%' */
-
-			switch (*format)
-			{
-			case 'c':
-				count += _putchar(va_arg(args, int));
-				break;
-
-			case 's':
-				count += print_str(va_arg(args, char *));
-				break;
-
-			case '%':
-				count += _putchar('%');
-				break;
-
-			default:
-				count += _putchar('%'); /* Print the '%' character */
-				count += _putchar(*format);
-			}
-		}
-		else
-		{
-			count += _putchar(*format);
-		}
-
-		format++;
-	}
-
-	va_end(args);
-
-	return (count);
-}
-
-/**
- * _putchar - Custom putchar function
- * @c: Character to be printed
- *
- * Return: 1 (success) or EOF (failure)
- */
-int _putchar(char c)
-{
-	return (write(1, &c, 1));
-}
-
-/**
- * print_str - Custom function to print a string
- * @str: String to be printed
- *
- * Return: Number of characters printed (excluding the null byte)
- */
-int print_str(char *str)
-{
-	int count = 0;
-
-	if (str == NULL)
-		str = "(null)";
-
-	while (*str)
-	{
-		count += _putchar(*str);
-		str++;
-	}
-
-	return (count);
+	va_start(arg_list, format);
+	printed_chars = format_reciever(format, f_list, arg_list);
+	va_end(arg_list);
+	return (printed_chars);
 }
