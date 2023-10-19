@@ -1,32 +1,27 @@
-/* main.h */
-
 #ifndef MAIN_H
 #define MAIN_H
 
 #include <stdarg.h>
-#include <stddef.h>
+#include <unistd.h>
 
 /**
- * struct params - Struct to hold various parameters for a format specifier
- * @flags: Flags (e.g., '-', '0', '#', '+', ' ')
+ * struct params - Parameters struct
  * @width: Minimum field width
- * @precision: Precision for numeric types
- * @size: Size modifier (e.g., 'h', 'l')
- * @specifier: Format specifier (e.g., 'c', 's', 'd', 'i', 'u', 'x', 'X', 'o', 'b', 'p', '%')
+ * @precision: Precision
+ * Description: Specifies the minimum number of characters to be printed.
+ * If the value to be printed is shorter than this number,
+ * the result is padded with blank spaces.
+ * The value is not truncated even if the result is larger.
  */
 typedef struct params
 {
-    char flags;
     int width;
     int precision;
-    char size;
-    char specifier;
 } params_t;
 
-/* Function prototypes */
 int _printf(const char *format, ...);
 int process_format_specifier(const char **format, va_list args);
-int custom_putchar(int c);
+int custom_putchar(char c);
 int print_str(char *str);
 
 #endif /* MAIN_H */

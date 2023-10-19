@@ -1,86 +1,87 @@
 #include "main.h"
-#include <unistd.h>
-#include <stdarg.h>
 
 /**
  * _printf - Custom printf function
  * @format: Format string
  *
- * Return: Number of characters printed (excluding the null byte)
+ * Return: Number of characters printed (excluding null byte)
  */
 int _printf(const char *format, ...)
 {
-	va_list args;
 	int count = 0;
+	va_list args;
 
 	va_start(args, format);
 
 	while (format && *format)
 	{
-		if (*format == '%' && *(format + 1) != '\0')
+		if (*format == '%')
 		{
-			format++; /* Move past '%' */
-
-			switch (*format)
+			format++;
+			if (*format)
 			{
-			case 'c':
-				count += custom_putchar(va_arg(args, int));
-				break;
-
-			case 's':
-				count += print_str(va_arg(args, char *));
-				break;
-
-			case '%':
-				count += custom_putchar('%');
-				break;
-
-			default:
-				count += custom_putchar('%'); /* Print the '%' character */
-				count += custom_putchar(*format);
+				count += process_format_specifier(&format, args);
+				continue;
 			}
 		}
-		else
-		{
-			count += custom_putchar(*format);
-		}
-
-		format++;
+		count += custom_putchar(*format++);
 	}
 
 	va_end(args);
+	return (count);
+}
+
+/**
+ * process_format_specifier - Process format specifier
+ * @format: Pointer to the format string
+ * @args: Variable arguments list
+ *
+ * Return: Number of characters printed (excluding null byte)
+ */
+int process_format_specifier(const char **format, va_list args)
+{
+	int count = 0;
+
+	if (**format == 's')
+		count += print_str(va_arg(args, char *));
+	else if (**format == '%')
+		count += custom_putchar('%');
+	else if (**format)
+		count += custom_putchar(**format);
+
+	(*format)++;
 
 	return (count);
 }
 
 /**
  * custom_putchar - Custom putchar function
- * @c: Character to be printed
+ * @c: Character to print
  *
- * Return: 1 (success) or EOF (failure)
+ * Return: 1 (Success)
  */
-int custom_putchar(int c)
+int custom_putchar(char c)
 {
 	return (write(1, &c, 1));
 }
 
 /**
- * print_str - Custom function to print a string
- * @str: String to be printed
+ * print_str - Print string function
+ * @str: String to print
  *
- * Return: Number of characters printed (excluding the null byte)
+ * Return: Number of characters printed (excluding null byte)
  */
 int print_str(char *str)
 {
 	int count = 0;
 
-	if (str == NULL)
-		str = "(null)";
-
-	while (*str)
+	if (str)
 	{
-		count += custom_putchar(*str);
-		str++;
+		while (*str)
+		{
+			count += custom_putchar(*str);
+			str++;
+		}
 	}
 
 	return (count);
