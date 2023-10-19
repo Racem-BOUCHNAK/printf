@@ -1,87 +1,91 @@
-#include "main.h"
+#include <unistd.h>
+#include <stdarg.h>
+#include <stdio.h>
+
+/* Function declarations */
+int _printf(const char *format, ...);
+int _putchar(char c);
+int print_str(char *str);
 
 /**
  * _printf - Custom printf function
  * @format: Format string
  *
- * Return: Number of characters printed (excluding null byte)
+ * Return: Number of characters printed (excluding the null byte)
  */
 int _printf(const char *format, ...)
 {
-	int count = 0;
 	va_list args;
+	int count = 0;
 
 	va_start(args, format);
 
 	while (format && *format)
 	{
-		if (*format == '%')
+		if (*format == '%' && *(format + 1) != '\0')
 		{
-			format++;
-			if (*format)
+			format++; /* Move past '%' */
+
+			switch (*format)
 			{
-				count += process_format_specifier(&format, args);
-				continue;
+			case 'c':
+				count += _putchar(va_arg(args, int));
+				break;
+
+			case 's':
+				count += print_str(va_arg(args, char *));
+				break;
+
+			case '%':
+				count += _putchar('%');
+				break;
+
+			default:
+				count += _putchar('%'); /* Print the '%' character */
+				count += _putchar(*format);
 			}
 		}
-		count += custom_putchar(*format++);
+		else
+		{
+			count += _putchar(*format);
+		}
+
+		format++;
 	}
 
 	va_end(args);
-	return (count);
-}
-
-/**
- * process_format_specifier - Process format specifier
- * @format: Pointer to the format string
- * @args: Variable arguments list
- *
- * Return: Number of characters printed (excluding null byte)
- */
-int process_format_specifier(const char **format, va_list args)
-{
-	int count = 0;
-
-	if (**format == 's')
-		count += print_str(va_arg(args, char *));
-	else if (**format == '%')
-		count += custom_putchar('%');
-	else if (**format)
-		count += custom_putchar(**format);
-
-	(*format)++;
 
 	return (count);
 }
 
 /**
- * custom_putchar - Custom putchar function
- * @c: Character to print
+ * _putchar - Custom putchar function
+ * @c: Character to be printed
  *
- * Return: 1 (Success)
+ * Return: 1 (success) or EOF (failure)
  */
-int custom_putchar(char c)
+int _putchar(char c)
 {
 	return (write(1, &c, 1));
 }
 
 /**
- * print_str - Print string function
- * @str: String to print
+ * print_str - Custom function to print a string
+ * @str: String to be printed
  *
- * Return: Number of characters printed (excluding null byte)
+ * Return: Number of characters printed (excluding the null byte)
  */
 int print_str(char *str)
 {
 	int count = 0;
 
-	if (str)
+	if (str == NULL)
+		str = "(null)";
+
+	while (*str)
 	{
-		while (*str)
-		{
-			count += custom_putchar(*str);
-			str++;
-		}
+		count += _putchar(*str);
+		str++;
 	}
 
 	return (count);
