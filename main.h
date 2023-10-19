@@ -50,7 +50,7 @@ char *_memcpy(char *dest, char *src, unsigned int n);
 int print_unsgined_number(unsigned int n);
 int hex_check(int num, char x);
 int print_hex_aux(unsigned long int num);
-int isNonAlphaNumeric(char c); 
+int isNonAlphaNumeric(char c);
 int _puts(char *str);
 char *convert(unsigned long int num, int base, int lowercase);
 #endif
