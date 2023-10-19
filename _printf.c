@@ -10,47 +10,47 @@
  */
 int _printf(const char *format, ...)
 {
-    va_list args;
-    int count = 0;
+	va_list args;
+	int count = 0;
 
-    va_start(args, format);
+	va_start(args, format);
 
-    while (format && *format)
-    {
-        if (*format == '%' && *(format + 1) != '\0')
-        {
-            format++; /* Move past '%' */
+	while (format && *format)
+	{
+		if (*format == '%' && *(format + 1) != '\0')
+		{
+			format++; /* Move past '%' */
 
-            switch (*format)
-            {
-            case 'c':
-                count += custom_putchar(va_arg(args, int));
-                break;
+			switch (*format)
+			{
+			case 'c':
+				count += custom_putchar(va_arg(args, int));
+				break;
 
-            case 's':
-                count += print_str(va_arg(args, char *));
-                break;
+			case 's':
+				count += print_str(va_arg(args, char *));
+				break;
 
-            case '%':
-                count += custom_putchar('%');
-                break;
+			case '%':
+				count += custom_putchar('%');
+				break;
 
-            default:
-                count += custom_putchar('%'); /* Print the '%' character */
-                count += custom_putchar(*format);
-            }
-        }
-        else
-        {
-            count += custom_putchar(*format);
-        }
+			default:
+				count += custom_putchar('%'); /* Print the '%' character */
+				count += custom_putchar(*format);
+			}
+		}
+		else
+		{
+			count += custom_putchar(*format);
+		}
 
-        format++;
-    }
+		format++;
+	}
 
-    va_end(args);
+	va_end(args);
 
-    return count;
+	return (count);
 }
 
 /**
@@ -61,7 +61,7 @@ int _printf(const char *format, ...)
  */
 int custom_putchar(int c)
 {
-    return write(1, &c, 1);
+	return (write(1, &c, 1));
 }
 
 /**
@@ -72,16 +72,16 @@ int custom_putchar(int c)
  */
 int print_str(char *str)
 {
-    int count = 0;
+	int count = 0;
 
-    if (str == NULL)
-        str = "(null)";
+	if (str == NULL)
+		str = "(null)";
 
-    while (*str)
-    {
-        count += custom_putchar(*str);
-        str++;
-    }
+	while (*str)
+	{
+		count += custom_putchar(*str);
+		str++;
+	}
 
-    return count;
+	return (count);
 }
